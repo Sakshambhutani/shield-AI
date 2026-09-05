@@ -1,3 +1,4 @@
+import BudgetLens from "./BudgetLens";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 import {
@@ -143,7 +144,10 @@ function OpportunityCard({ data }: NodeProps<CardNode>) {
       {n.level > 0 && <Handle type="target" position={Position.Left} />}
       <button
         className="card-main nodrag"
-        onClick={() => onSelect(n.id)}
+        onClick={(event) => {
+          event.stopPropagation();
+          if (event.detail < 2) onSelect(n.id);
+        }}
         aria-expanded={count ? expanded : undefined}
         aria-label={`${n.label}${count ? `, ${expanded ? "collapse" : "expand"} ${count} children` : n.kind === "proof" ? ", open source" : ""}`}
       >
@@ -1010,6 +1014,9 @@ export default function App() {
               </span>
             ))}
           </div>
+          {(selected === "india" || activePath.includes("mod")) && (
+            <BudgetLens onMission={jump} />
+          )}
           <div className="map-workspace">
             <div className="graph-area">
               <div className="graph-caption">
@@ -1027,6 +1034,10 @@ export default function App() {
                   maxZoom={1.6}
                   fitView
                   fitViewOptions={{ padding: 0.14, maxZoom: 1 }}
+                  onNodeClick={(event, node) => {
+                    if (event.detail < 2) select(node.id);
+                  }}
+                  zoomOnDoubleClick={false}
                   nodesDraggable={false}
                   nodesConnectable={false}
                   elementsSelectable={false}

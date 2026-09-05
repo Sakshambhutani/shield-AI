@@ -38,7 +38,8 @@ This deliverable is repo-ready code; no cloud deployment or account configuratio
 
 - The initial graph contains the strategic root and four first-level branches only.
 - Click a card to reveal its next generation and open the evidence drawer. Click it again to collapse descendants. Active ancestors and descendants stay prominent; unrelated siblings fade.
-- Drag to pan, scroll or use controls to zoom, and use **Fit all visible** when you want the broader tree.
+- Drag the canvas to pan; scroll or use controls to zoom. Card clicks expand branches and open evidence. Double-click zoom is disabled to avoid accidental camera movement. Use **Fit all visible** for the broader tree.
+- The clickable MoD budget lens shows the official spending composition and narrows annual budget → capital expenditure → capital acquisition → domestic earmark. The next step opens service demand without inventing an undisclosed budget allocation.
 - **Walk the core path** follows India → MoD → Navy → NSUAS → V-BAT → Netherlands precedent. The final source is opened only by a deliberate click, so the walkthrough never triggers a popup.
 - Product, service and horizon filters work together. Matching programmes and their ancestors are revealed. Empty combinations show a reset action.
 - Evidence cards include what a number means, fit, limits, sources and executive tags. Source links open a new tab with `noopener noreferrer`.

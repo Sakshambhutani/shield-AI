@@ -1600,3 +1600,193 @@ body {
   -webkit-line-clamp: 3;
   line-clamp: 3;
 }
+/* Custom cards remain interactive even with graph selection/dragging disabled. */
+.map-card {
+  pointer-events: all;
+  cursor: pointer;
+}
+.map-card .card-main {
+  cursor: pointer;
+}
+.budget-lens {
+  border-bottom: 1px solid #2b3c49;
+  background: #101c25;
+}
+.budget-lens-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  text-align: left;
+  padding: 16px 21px;
+  color: #b8d9ef;
+}
+.budget-lens-heading strong {
+  display: block;
+  font-size: 13px;
+  font-weight: 550;
+}
+.budget-lens-heading small {
+  display: block;
+  color: #8da5b5;
+  font-size: 10px;
+  margin-top: 5px;
+}
+.budget-lens-content {
+  padding: 0 21px 17px;
+}
+.budget-shares {
+  display: flex;
+  height: 19px;
+  gap: 3px;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.budget-shares button:hover {
+  filter: brightness(1.2);
+}
+.budget-share-labels {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin-top: 10px;
+}
+.budget-share-labels button {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 9px;
+  color: #8ea4b5;
+  padding: 3px 0;
+}
+.budget-share-labels .chosen {
+  color: #e0edf5;
+}
+.budget-share-labels i {
+  width: 6px;
+  height: 6px;
+  border-radius: 2px;
+}
+.budget-share-labels b {
+  font-weight: 500;
+  margin-left: 3px;
+}
+.budget-area-note,
+.budget-step-note {
+  font-size: 10px;
+  line-height: 1.6;
+  color: #99b2c2;
+  margin: 10px 0;
+}
+.budget-steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-top: 15px;
+}
+.budget-steps button {
+  border: 1px solid #314552;
+  background: #152530;
+  padding: 12px;
+  text-align: left;
+  border-radius: 4px;
+  position: relative;
+}
+.budget-steps .chosen {
+  border-color: #75baff;
+  background: #1a3547;
+}
+.budget-steps small {
+  display: block;
+  color: #9db4c4;
+  font-size: 9px;
+}
+.budget-steps strong {
+  display: block;
+  color: #91caff;
+  margin-top: 7px;
+  font-size: 20px;
+  font-weight: 500;
+}
+.budget-steps svg {
+  position: absolute;
+  right: 9px;
+  top: 50%;
+  color: #6b96b0;
+}
+.budget-track {
+  margin-top: 12px;
+  height: 5px;
+  background: #273744;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.budget-track > div {
+  height: 100%;
+  background: #75baff;
+  transition: width 0.4s;
+}
+.budget-next {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  border-top: 1px solid #2b4050;
+  padding-top: 13px;
+  margin-top: 12px;
+}
+.budget-next > div {
+  flex: 1;
+  min-width: 240px;
+}
+.budget-next strong {
+  font-size: 11px;
+  font-weight: 500;
+  color: #cfdfeb;
+}
+.budget-next p {
+  font-size: 10px;
+  line-height: 1.6;
+  color: #8ea6b7;
+  margin-top: 5px;
+  max-width: 650px;
+}
+.budget-next button {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid #3a5667;
+  padding: 8px 10px;
+  font-size: 10px;
+  border-radius: 3px;
+  color: #acd4eb;
+}
+.budget-next button:hover {
+  background: #224052;
+}
+.budget-source {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #7894a9;
+  font-size: 9px;
+  line-height: 1.6;
+  margin-top: 12px;
+}
+@media (max-width: 650px) {
+  .budget-steps {
+    grid-template-columns: 1fr 1fr;
+  }
+  .budget-steps strong {
+    font-size: 18px;
+  }
+  .budget-lens-content {
+    padding: 0 13px 15px;
+  }
+  .budget-lens-heading {
+    padding: 15px 13px;
+  }
+  .budget-source {
+    align-items: flex-start;
+  }
+}
