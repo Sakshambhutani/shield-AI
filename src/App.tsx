@@ -53,8 +53,8 @@ import type {
 } from "./data/opportunities";
 import { sources, sourceById } from "./data/sources";
 import { pathTo, eligibleNodes, visibleNodes } from "./graph";
-import { modelDefaults, calculateScenarios, formatCr } from "./model";
-import type { ModelInputs } from "./model";
+import { ScenarioPanel } from "./strategy/shared";
+
 const colors: Record<EvidenceType, string> = {
   "official-budget": "#75baff",
   "official-programme": "#e9bf6a",
@@ -202,201 +202,6 @@ function OpportunityCard({ data }: NodeProps<CardNode>) {
   );
 }
 const nodeTypes = { opportunity: OpportunityCard };
-function ModelPanel() {
-  const [v, setV] = useState<ModelInputs>(modelDefaults);
-  const [usd, setUsd] = useState(false);
-  const results = calculateScenarios(v);
-  const set = (key: keyof ModelInputs, value: number) =>
-    setV((old) => ({ ...old, [key]: Number.isFinite(value) ? value : 0 }));
-  const fields: [
-    keyof ModelInputs,
-    keyof ModelInputs,
-    string,
-    string,
-    number,
-    number,
-    number,
-    string,
-  ][] = [
-    [
-      "tactical",
-      "tacticalShare",
-      "Tactical military UAS",
-      "Shield-fit share",
-      5,
-      35,
-      1,
-      "Only a subset of tactical demand fits V-BAT, Hivemind and Vision.",
-    ],
-    [
-      "male",
-      "maleShare",
-      "Indigenous MALE",
-      "Software / sensor / simulation attach",
-      2,
-      15,
-      0.5,
-      "Reported ₹20,000–30,000 Cr range. Indian OEM attach, not the MALE airframe.",
-    ],
-    [
-      "space",
-      "spaceShare",
-      "SBS-III military space",
-      "Speculative autonomy / simulation attach",
-      0.5,
-      5,
-      0.5,
-      "Reported programme. No evidence of Shield AI participation in SBS-III.",
-    ],
-  ];
-  return (
-    <details className="disclosure model-panel">
-      <summary>
-        <span className="section-icon purple">
-          <SlidersHorizontal size={19} />
-        </span>
-        <span>
-          <strong>Fit-adjusted opportunity model</strong>
-          <small>Quantified floor + large unquantified option set</small>
-        </span>
-        <span className="summary-label">ASSUMPTIONS, NOT TAM</span>
-        <ChevronRight className="disclosure-chevron" size={18} />
-      </summary>
-      <div className="disclosure-content">
-        <div className="model-warning">
-          <Info size={17} />
-          <p>
-            Scenario model, not an official market forecast. Only programmes
-            with a credible disclosed/reported value are quantified. Unpriced
-            opportunities are excluded from the total. “Floor” describes
-            coverage, not a guaranteed lower bound. These are multi-year fit
-            envelopes, never 18-month revenue.
-          </p>
-        </div>
-        <div className="model-inputs">
-          {fields.map(
-            ([value, share, label, shareLabel, min, max, step, note], i) => (
-              <section className="model-input" key={value}>
-                <div className="micro">0{i + 1} / REPORTED PROGRAMME</div>
-                <h3>{label}</h3>
-                <label className="amount-input">
-                  Programme value · ₹ crore
-                  <input
-                    aria-label={`${label} programme value in crore`}
-                    type="number"
-                    min={value === "male" ? 20000 : 0}
-                    max={value === "male" ? 30000 : 1000000}
-                    step={value === "space" ? 1 : 100}
-                    value={v[value]}
-                    onChange={(e) =>
-                      set(
-                        value,
-                        Math.min(
-                          value === "male" ? 30000 : 1000000,
-                          Math.max(
-                            value === "male" ? 20000 : 0,
-                            Number(e.target.value),
-                          ),
-                        ),
-                      )
-                    }
-                  />
-                </label>
-                {i === 0 && (
-                  <button className="text-button" onClick={() => setUsd(!usd)}>
-                    {usd
-                      ? ">$2B reported · ₹19,000 Cr default assumes ₹95/$; not a live FX quote"
-                      : "Show reported USD context"}{" "}
-                    <ArrowUpRight size={12} />
-                  </button>
-                )}
-                <div className="slider-label">
-                  <label htmlFor={share}>{shareLabel}</label>
-                  <strong>{v[share]}%</strong>
-                </div>
-                <input
-                  id={share}
-                  type="range"
-                  min={min}
-                  max={max}
-                  step={step}
-                  value={v[share]}
-                  onChange={(e) => set(share, Number(e.target.value))}
-                />
-                <div className="range-labels">
-                  <span>{min}% conservative</span>
-                  <span>{max}% upside</span>
-                </div>
-                <p>{note}</p>
-                <SourceLink
-                  id={i === 0 ? "tactical" : i === 1 ? "male-it" : "sbs"}
-                />
-                {i === 1 && <SourceLink id="male-et" />}
-                {i === 0 && <SourceLink id="tactical-republication" />}
-              </section>
-            ),
-          )}
-        </div>
-        <div className="overlap-control">
-          <label htmlFor="overlap">
-            Potential tactical / MALE overlap deduction{" "}
-            <strong>{v.overlap}% of MALE attach</strong>
-          </label>
-          <input
-            id="overlap"
-            type="range"
-            min="0"
-            max="100"
-            step="5"
-            value={v.overlap}
-            onChange={(e) => set("overlap", Number(e.target.value))}
-          />
-          <p>
-            Default assumes distinct procurement scopes; public reporting does
-            not establish their mutual exclusivity. Increase this deduction to
-            avoid potential overlap. No programme is repeated by service.
-          </p>
-        </div>
-        <div className="scenario-results" aria-live="polite">
-          {Object.entries(results).map(([name, value]) => (
-            <div className={name === "base" ? "base" : ""} key={name}>
-              <span>{name} scenario</span>
-              <strong>
-                ₹{formatCr(value)} <small>Cr</small>
-              </strong>
-              <p>
-                {name === "base"
-                  ? "Your editable fit assumptions"
-                  : name === "conservative"
-                    ? "Minimum attach shares"
-                    : "Maximum attach shares"}{" "}
-                · multi-year
-              </p>
-            </div>
-          ))}
-        </div>
-        <p className="formula">
-          Σ programme value × fit / attach share; MALE contribution × (1 −
-          overlap deduction). Conservative / upside use the displayed minimum /
-          maximum shares and your edited programme values. No win probability,
-          contract share or revenue timing assumed.
-        </p>
-        <div className="exclusions">
-          <strong>Outside the numerical total</strong>
-          <p>
-            NSUAS · autonomous surface craft · submersibles · HAPS · CCA / X-BAT
-            · C-UAS · Aechelon training programmes · MHA / CAPF · sustainment /
-            recurring software. Individual values are not publicly separable or
-            inclusion could double-count.
-          </p>
-        </div>
-        <button className="button small" onClick={() => setV(modelDefaults)}>
-          <RotateCcw size={13} /> Reset assumptions
-        </button>
-      </div>
-    </details>
-  );
-}
 function EvidenceDrawer({
   node,
   onClose,
@@ -1148,7 +953,7 @@ export default function App() {
           ))}
         </section>
         <div className="bottom-panels">
-          <ModelPanel />
+          <ScenarioPanel />
           <Taxonomy />
           <Methodology />
         </div>

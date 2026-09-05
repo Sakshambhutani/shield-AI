@@ -4,3 +4,7 @@ dist/
 .DS_Store
 
 *.tsbuildinfo
+
+# Local verification outputs
+test-results/
+playwright-report/
